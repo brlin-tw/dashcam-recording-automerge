@@ -1,0 +1,10 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Dashcam recording automerge utility
+Upstream-Contact: 林博仁(Buo-ren, Lin) <Buo.Ren.Lin@gmail.com>
+Source: https://github.com/brlin-tw/dashcam-recording-automerge
+
+Files:
+ *README.md
+ */README.md
+Copyright: 2021 林博仁(Buo-ren, Lin) <Buo.Ren.Lin@gmail.com>
+License: CC-BY-SA-4.0+

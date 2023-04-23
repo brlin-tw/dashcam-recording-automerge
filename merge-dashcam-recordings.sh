@@ -251,6 +251,10 @@ for source_file in "${source_files[@]}"; do
     if source_file_is_the_last_source_files \
         "${source_file_index}" \
         "${source_files_quantity}"; then
+        printf \
+            'Info: Detected last source file "%s".\n' \
+            "${source_file}"
+
         if test "${#source_files_to_merge[@]}" -eq 0; then
             printf \
                 'Info: Recording sequence has only one file, moving to DESTDIR...\n'

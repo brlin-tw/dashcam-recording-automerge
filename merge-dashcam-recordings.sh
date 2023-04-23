@@ -444,3 +444,5 @@ for source_file in "${source_files[@]}"; do
 
     source_file_index="$((source_file_index + 1))"
 done
+
+printf 'Info: Operation completed without errors.\n'

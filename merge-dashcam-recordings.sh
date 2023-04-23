@@ -52,6 +52,65 @@ merge_source_files_to_destdir(){
     fi
 }
 
+determine_next_sequence_video_timestamp_matching_regex(){
+    local timestamp_minute="${1}"; shift
+    local timestamp_hour="${1}"; shift
+
+    local \
+        regex_minute='^[0-5][0-9]$' \
+        regex_hour='^(2[0-3]|[01][0-9])$'
+    if ! [[ "${timestamp_minute}" =~ ${regex_minute} ]]; then
+        printf \
+            '%s: Error: Invalid timestamp_minute "%s" specified, should be between 00~59.\n' \
+            "${FUNCNAME[0]}" \
+            "${timestamp_minute}" \
+            1>&2
+            return 1
+    fi
+
+    if ! [[ "${timestamp_hour}" =~ ${regex_hour} ]]; then
+        printf \
+            '%s: Error: Invalid timestamp_hour "%s" specified, should be between 00~23.\n' \
+            "${FUNCNAME[0]}" \
+            "${timestamp_hour}" \
+            1>&2
+            return 1
+    fi
+
+    # NOTE: Leading zeros will confuse Bash's arithmetic expansion as
+    # numbers in different base
+    local \
+        timestamp_minute_without_leading_zeroes \
+        timestamp_hour_without_leading_zeroes
+    timestamp_minute_without_leading_zeroes="${timestamp_minute#0}"
+    timestamp_hour_without_leading_zeroes="${timestamp_hour#0}"
+
+    local \
+        next_timestamp_minute_in_sequence_raw \
+        next_timestamp_hour_in_sequence_raw
+    next_timestamp_minute_in_sequence_raw="$(((timestamp_minute_without_leading_zeroes + RECORDING_SPLIT_MINUTES) % 60))"
+    next_timestamp_hour_in_sequence_raw="$(((timestamp_hour_without_leading_zeroes + (timestamp_minute_without_leading_zeroes + RECORDING_SPLIT_MINUTES) / 60) % 24))"
+
+    # Add padding leadging zeros for two digits when necessary
+    if test "${#next_timestamp_minute_in_sequence_raw}" -eq 1; then
+        next_timestamp_minute_in_sequence="0${next_timestamp_minute_in_sequence_raw}"
+    else
+        next_timestamp_minute_in_sequence="${next_timestamp_minute_in_sequence_raw}"
+    fi
+
+    if test "${#next_timestamp_hour_in_sequence_raw}" -eq 1; then
+        next_timestamp_hour_in_sequence="0${next_timestamp_hour_in_sequence_raw}"
+    else
+        next_timestamp_hour_in_sequence="${next_timestamp_hour_in_sequence_raw}"
+    fi
+
+    # NOTE: It may be possible that the seconds will not be the same in
+    # the next sequence of the recording, so we have to match them
+    printf '^%s%s[0-5][0-9]$' \
+        "${next_timestamp_hour_in_sequence}" \
+        "${next_timestamp_minute_in_sequence}"
+}
+
 required_commands=(
     ffmpeg-cat
     grep
@@ -320,17 +379,17 @@ for source_file in "${source_files[@]}"; do
 
     source_files_to_merge+=("${source_file}")
 
-    # NOTE: Leading zeros will confuse Bash's arithmetic expansion as
-    # numbers in different base
-    timestamp_minute_without_leading_zeroes="${timestamp_minute#0}"
-    timestamp_hour_without_leading_zeroes="${timestamp_hour#0}"
-
-    next_timestamp_minute_in_sequence="$(((timestamp_minute_without_leading_zeroes + RECORDING_SPLIT_MINUTES) % 60))"
-    next_timestamp_hour_in_sequence="$(((timestamp_hour_without_leading_zeroes + (timestamp_minute_without_leading_zeroes + RECORDING_SPLIT_MINUTES) / 60) % 24))"
-
-    # NOTE: It may be possible that the seconds will not be the same in
-    # the next sequence of the recording, so we have to match them
-    regex_next_timestamp_in_sequence="^${next_timestamp_hour_in_sequence}${next_timestamp_minute_in_sequence}[0-5][0-9]$"
+    if ! \
+        regex_next_timestamp_in_sequence="$(
+            determine_next_sequence_video_timestamp_matching_regex \
+                "${timestamp_minute}" \
+                "${timestamp_hour}"
+        )"; then
+        printf \
+            'Error: Unable to determine the regular expression to match the next sequence video timestamp.\n' \
+            1>&2
+        exit 7
+    fi
 
     if test "${DEBUG}" == true; then
         printf \

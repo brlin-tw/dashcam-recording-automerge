@@ -187,6 +187,13 @@ for source_file in "${source_files[@]}"; do
         continue
     fi
 
+    if test "${DEBUG}" == true; then
+        printf \
+            'DEBUG: Source timestamp determined to be "%s".\n' \
+            "${source_timestamp}" \
+            1>&2
+    fi
+
     # If the current procesed file does not have the timestamp of the
     # next sequence file, all previous sequence's files has been found
     if test -n "${regex_next_timestamp_in_sequence}" \
@@ -324,6 +331,13 @@ for source_file in "${source_files[@]}"; do
     # NOTE: It may be possible that the seconds will not be the same in
     # the next sequence of the recording, so we have to match them
     regex_next_timestamp_in_sequence="^${next_timestamp_hour_in_sequence}${next_timestamp_minute_in_sequence}[0-5][0-9]$"
+
+    if test "${DEBUG}" == true; then
+        printf \
+            'DEBUG: Next timestamp in sequence matching regular expression determined to be "%s".\n' \
+            "${regex_next_timestamp_in_sequence}" \
+            1>&2
+    fi
 
     last_sequence_recording_timestamp="${source_timestamp}"
 

@@ -2,7 +2,7 @@
 
 Automatic merging dashcam recordings that are named in a specific fashion
 
-![GitHub Actions workflow status badge](https://github.com/brlin-tw/dashcam-recording-automerge/actions/workflows/check-potential-problems.yml/badge.svg "GitHub Actions workflow status") [![pre-commit enabled badge](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white "This project uses pre-commit to check potential problems")](https://pre-commit.com/) [![REUSE Specification compliance badge](https://api.reuse.software/badge/github.com/brlin-tw/dashcam-recording-automerge "This project complies to the REUSE specification to decrease software licensing costs")](https://api.reuse.software/info/github.com/brlin-tw/dashcam-recording-automerge)
+![Continous Integration(CI) status badge](https://github.com/brlin-tw/dashcam-recording-automerge/actions/workflows/run-continous-integration.yml/badge.svg "Continous Integration(CI) status") [![pre-commit enabled badge](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white "This project uses pre-commit to check potential problems")](https://pre-commit.com/) [![REUSE Specification compliance badge](https://api.reuse.software/badge/github.com/brlin-tw/dashcam-recording-automerge "This project complies to the REUSE specification to decrease software licensing costs")](https://api.reuse.software/info/github.com/brlin-tw/dashcam-recording-automerge)
 
 ## Dependencies
 

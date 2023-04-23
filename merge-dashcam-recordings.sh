@@ -235,6 +235,7 @@ for source_file in "${source_files[@]}"; do
             fi
         fi
         first_sequence_recording_filename=
+        first_sequence_recording_timestamp=
         source_files_to_merge=()
     fi
 

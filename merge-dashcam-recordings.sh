@@ -258,7 +258,9 @@ for source_file in "${source_files[@]}"; do
     if test -n "${regex_next_timestamp_in_sequence}" \
             && ! [[ "${source_timestamp}" =~ ${regex_next_timestamp_in_sequence} ]]; then
         printf \
-            'Info: Detected end of recording sequence.\n'
+            'Info: Detected end of recording sequence(%s~%s).\n' \
+            "${first_sequence_recording_timestamp}" \
+            "${last_sequence_recording_timestamp}"
 
         if test "${#source_files_to_merge[@]}" -eq 1; then
             printf \

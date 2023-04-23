@@ -16,7 +16,7 @@ set \
     -o errtrace \
     -o nounset
 
-source_file_is_the_last_source_files(){
+source_file_is_the_last_source_file(){
     local source_file_index="${1}"; shift
     local source_files_quantity="${1}"; shift
 
@@ -323,7 +323,7 @@ for source_file in "${source_files[@]}"; do
     # If the current processed file is the last file in the source
     # files then it must be processed in the current iteration of the
     # loop
-    if source_file_is_the_last_source_files \
+    if source_file_is_the_last_source_file \
         "${source_file_index}" \
         "${source_files_quantity}"; then
         printf \

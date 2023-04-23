@@ -17,6 +17,9 @@ program to be in the system's command search PATHs:
 Note that the dependencies of the dependencies(e.g. FFmpeg) must be
 satisfied, as well.
 
+This software is specifically tested in Ubuntu GNU+Linux operating
+system, however it should work in any similar environments as well.
+
 ## Licensing
 
 Unless otherwise noted, this product is licensed under [the third version of the GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.html),

@@ -326,7 +326,7 @@ for source_file in "${source_files[@]}"; do
     timestamp_hour_without_leading_zeroes="${timestamp_hour#0}"
 
     next_timestamp_minute_in_sequence="$(((timestamp_minute_without_leading_zeroes + RECORDING_SPLIT_MINUTES) % 60))"
-    next_timestamp_hour_in_sequence="$((timestamp_hour_without_leading_zeroes + (timestamp_minute_without_leading_zeroes + RECORDING_SPLIT_MINUTES) / 60))"
+    next_timestamp_hour_in_sequence="$(((timestamp_hour_without_leading_zeroes + (timestamp_minute_without_leading_zeroes + RECORDING_SPLIT_MINUTES) / 60) % 24))"
 
     # NOTE: It may be possible that the seconds will not be the same in
     # the next sequence of the recording, so we have to match them

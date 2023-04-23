@@ -39,7 +39,14 @@ merge_source_files_to_destdir(){
     fi
     export FFCAT_DROP_SRC_FILES
 
-    local merged_filename="${first_sequence_recording_filename/${first_sequence_recording_timestamp}/${first_sequence_recording_timestamp}-${last_sequence_recording_timestamp}}"
+    local \
+        merged_filename_raw \
+        merged_filename
+    # Inject last sequence recording timestamp
+    merged_filename_raw="${first_sequence_recording_filename/${first_sequence_recording_timestamp}/${first_sequence_recording_timestamp}-${last_sequence_recording_timestamp}}"
+
+    # Fix output file extension
+    merged_filename="${merged_filename_raw%.*}.mkv"
 
     if ! \
         ffmpeg-cat \

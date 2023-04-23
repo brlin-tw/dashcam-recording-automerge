@@ -376,7 +376,7 @@ for source_file in "${source_files[@]}"; do
                     determine_merged_file_filename \
                         "${first_sequence_recording_filename}" \
                         "${first_sequence_recording_timestamp}" \
-                        "${last_sequence_recording_timestamp}"
+                        "${source_timestamp}"
                 )"; then
                 printf \
                     "%s: Error: Unable to determine merged file's filename.\\n" \

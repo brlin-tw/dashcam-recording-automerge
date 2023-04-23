@@ -8,7 +8,12 @@ Automatic merging dashcam recordings that are named in a specific fashion
 
 This utility requires the following software to be installed and its program to be in the system's command search PATHs:
 
-* ffmpeg-cat
+* [Bash](https://www.gnu.org/software/bash/)(>=4.3)
+* [ffmpeg-cat](https://github.com/brlin-tw/ffmpeg-cat)
+* [GNU Core Utilities(Coreutils)](https://www.gnu.org/software/coreutils/)
+* [Grep](https://www.gnu.org/software/grep/)
+
+Note that the dependencies of the dependencies(e.g. FFmpeg) must be satisfied, as well.
 
 ## Licensing
 

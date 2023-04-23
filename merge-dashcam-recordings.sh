@@ -187,6 +187,8 @@ for source_file in "${source_files[@]}"; do
         continue
     fi
 
+    # If the current procesed file does not have the timestamp of the
+    # next sequence file, all previous sequence's files has been found
     if test -n "${regex_next_timestamp_in_sequence}" \
             && ! [[ "${source_timestamp}" =~ ${regex_next_timestamp_in_sequence} ]]; then
         printf \
@@ -234,11 +236,18 @@ for source_file in "${source_files[@]}"; do
                 fi
             fi
         fi
+
+        # Current processed file is the first file of the current
+        # sequence, resetting sequence settings so that it will be
+        # processed by the following logic
         first_sequence_recording_filename=
         first_sequence_recording_timestamp=
         source_files_to_merge=()
     fi
 
+    # If the current processed file is the last file in the source
+    # files then it must be processed in the current iteration of the
+    # loop
     if source_file_is_the_last_source_files \
         "${source_file_index}" \
         "${source_files_quantity}"; then
@@ -285,6 +294,8 @@ for source_file in "${source_files[@]}"; do
                 fi
             fi
         fi
+
+        # All files has been processed, breaking the loop
         break
     fi
 

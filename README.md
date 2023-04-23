@@ -22,7 +22,7 @@ system, however it should work in any similar environments as well.
 
 ## Usage
 
-1. Download the release package
+1. Download [the release package](https://github.com/brlin-tw/dashcam-recording-automerge/releases)
 1. Extract the release package
 1. Launch a text terminal
 1. Run the program with [the required environment variables specified](#environment-variables):

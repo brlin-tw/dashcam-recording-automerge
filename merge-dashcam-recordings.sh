@@ -265,7 +265,7 @@ for source_file in "${source_files[@]}"; do
             1>&2
     fi
 
-    # If the current procesed file does not have the timestamp of the
+    # If the current processed file does not have the timestamp of the
     # next sequence file, all previous sequence's files has been found
     if test -n "${regex_next_timestamp_in_sequence}" \
             && ! [[ "${source_timestamp}" =~ ${regex_next_timestamp_in_sequence} ]]; then

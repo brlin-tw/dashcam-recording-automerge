@@ -23,11 +23,25 @@ source_file_is_the_last_source_file(){
     test "${source_file_index}" -eq "$((source_files_quantity - 1))"
 }
 
-merge_source_files_to_destdir(){
+determine_merged_file_filename(){
     local first_sequence_recording_filename="${1}"; shift
     local first_sequence_recording_timestamp="${1}"; shift
     local last_sequence_recording_timestamp="${1}"; shift
-    local dest_dir="${1}"; shift
+
+    local \
+        merged_filename_raw \
+        merged_filename
+    # Inject last sequence recording timestamp
+    merged_filename_raw="${first_sequence_recording_filename/${first_sequence_recording_timestamp}/${first_sequence_recording_timestamp}-${last_sequence_recording_timestamp}}"
+
+    # Fix output file extension
+    merged_filename="${merged_filename_raw%.*}.mkv"
+
+    printf '%s' "${merged_filename}"
+}
+
+merge_source_files_to_destdir(){
+    local merged_file="${1}"; shift
     local -a source_files_to_merge=("${@}"); set --
 
     printf \
@@ -39,19 +53,10 @@ merge_source_files_to_destdir(){
     fi
     export FFCAT_DROP_SRC_FILES
 
-    local \
-        merged_filename_raw \
-        merged_filename
-    # Inject last sequence recording timestamp
-    merged_filename_raw="${first_sequence_recording_filename/${first_sequence_recording_timestamp}/${first_sequence_recording_timestamp}-${last_sequence_recording_timestamp}}"
-
-    # Fix output file extension
-    merged_filename="${merged_filename_raw%.*}.mkv"
-
     if ! \
         ffmpeg-cat \
             "${source_files_to_merge[@]}" \
-            >"${dest_dir}/${merged_filename}"; then
+            >"${merged_file}"; then
         printf \
             'Error: Unable to merge the source files using ffmpeg-cat.\n' \
             1>&2
@@ -290,19 +295,33 @@ for source_file in "${source_files[@]}"; do
                 fi
             fi
         else
+            if ! \
+                merged_file_filename="$(
+                    determine_merged_file_filename \
+                        "${first_sequence_recording_filename}" \
+                        "${first_sequence_recording_timestamp}" \
+                        "${last_sequence_recording_timestamp}"
+                )"; then
+                printf \
+                    "%s: Error: Unable to determine merged file's filename.\\n" \
+                    "${FUNCNAME[0]}" \
+                    1>&2
+                exit 4
+            fi
+
+            merged_file="${DEST_DIR}/${merged_file_filename}"
+
             if test "${DRY_RUN}" == true; then
                 printf \
-                    'Info: Would merge the following recording files and output to the DESTDIR:\n'
+                    'Info: Would merge the following recording files to "%s":\n' \
+                    "${merged_file}"
                 for source_file_dryrun in "${source_files_to_merge[@]}"; do
                     printf '* %s\n' "${source_file_dryrun}"
                 done
             else
                 if ! \
                     merge_source_files_to_destdir \
-                        "${first_sequence_recording_filename}" \
-                        "${first_sequence_recording_timestamp}" \
-                        "${last_sequence_recording_timestamp}" \
-                        "${DEST_DIR}" \
+                        "${merged_file}" \
                         "${source_files_to_merge[@]}"; then
                     printf \
                         'Error: Unable to merge the source files.\n' \
@@ -352,19 +371,33 @@ for source_file in "${source_files[@]}"; do
             fi
         else
             source_files_to_merge+=("${source_file}")
+            if ! \
+                merged_file_filename="$(
+                    determine_merged_file_filename \
+                        "${first_sequence_recording_filename}" \
+                        "${first_sequence_recording_timestamp}" \
+                        "${last_sequence_recording_timestamp}"
+                )"; then
+                printf \
+                    "%s: Error: Unable to determine merged file's filename.\\n" \
+                    "${FUNCNAME[0]}" \
+                    1>&2
+                exit 6
+            fi
+
+            merged_file="${DEST_DIR}/${merged_file_filename}"
+
             if test "${DRY_RUN}" == true; then
                 printf \
-                    'Info: Would merge the following recording files and output to the DESTDIR:\n'
+                    'Info: Would merge the following recording files to "%s":\n' \
+                    "${merged_file}"
                 for source_file_dryrun in "${source_files_to_merge[@]}"; do
                     printf '* %s\n' "${source_file_dryrun}"
                 done
             else
                 if ! \
                     merge_source_files_to_destdir \
-                        "${first_sequence_recording_filename}" \
-                        "${first_sequence_recording_timestamp}" \
-                        "${source_timestamp}" \
-                        "${DEST_DIR}" \
+                        "${merged_file}" \
                         "${source_files_to_merge[@]}"; then
                     printf \
                         'Error: Unable to merge the source files.\n' \

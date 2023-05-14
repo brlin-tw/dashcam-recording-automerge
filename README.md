@@ -4,6 +4,13 @@ Automatic merging dashcam recordings that are named in a specific fashion
 
 ![Continuous Integration(CI) status badge](https://github.com/brlin-tw/dashcam-recording-automerge/actions/workflows/run-continuous-integration.yml/badge.svg "Continuous Integration(CI) status") [![pre-commit enabled badge](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white "This project uses pre-commit to check potential problems")](https://pre-commit.com/) [![REUSE Specification compliance badge](https://api.reuse.software/badge/github.com/brlin-tw/dashcam-recording-automerge "This project complies to the REUSE specification to decrease software licensing costs")](https://api.reuse.software/info/github.com/brlin-tw/dashcam-recording-automerge)
 
+## Features
+
+* Support recording files with slightly skewed seconds timestamps
+* Support dry run to inspect whether it would do to the recordings
+* Support autoremoval of the source files
+* Bails out when somthing wrong happens to limit data loss
+
 ## Prerequisites
 
 This utility requires the following software to be installed and their
